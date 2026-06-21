@@ -1,10 +1,10 @@
-import pool from "@/lib/db";
+import { queryWithRetry } from "@/lib/db";
 import { notFound } from "next/navigation";
 
 export const revalidate = 0;
 
 export default async function LeadDetailPage({ params }) {
-  const { rows } = await pool.query("SELECT * FROM leads WHERE id = $1", [params.id]);
+  const { rows } = await queryWithRetry("SELECT * FROM leads WHERE id = $1", [params.id]);
   const lead = rows[0];
   if (!lead) notFound();
   return (
